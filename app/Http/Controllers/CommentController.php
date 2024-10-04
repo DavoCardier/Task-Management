@@ -9,8 +9,7 @@ class CommentController extends Controller
 {
     public function store(Request $request)
 {
-    // Aquí iría el código para guardar el comentario
-    // Por ejemplo:
+
     $comment = Comment::create($request->all());
     
 }
