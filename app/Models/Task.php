@@ -7,10 +7,17 @@ use Illuminate\Database\Eloquent\Model;
 
 class Task extends Model
 {
-      protected $fillable = [
+    use HasFactory;
+
+    protected $fillable = [
         'title',
         'description',
         'due_date',
         'status'
     ];
+
+    public function comments()
+    {
+        return $this->hasMany(Comment::class);
+    }
 }

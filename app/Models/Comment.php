@@ -13,4 +13,9 @@ class Comment extends Model
         'content',
         'task_id'
     ];
+
+    public function task()
+    {
+        return $this->belongsTo(Task::class);
+    }
 }

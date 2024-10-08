@@ -1,31 +1,19 @@
 <?php
 
+use App\Http\Controllers\TaskController;
+use App\Http\Controllers\CommentController;
+use Illuminate\Support\Facades\Facade;
 use Illuminate\Support\Facades\Route;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "web" middleware group. Make something great!
-|
-*/
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::post('/tasks', [TaskController::class, 'store'])->name('tasks.store');
 
-Route::get('/notes', function() { //Esto retornara recourse/views/note/index.blade.php (sin necesidad de escribirlo todo)
-         
-    $notes = [
-        'Primera nota',
-        'Segunda nota',
-        'Tercera nota',
-        'Cuarta nota',
-        'Quinta nota',
-    ];
+Route::get('/', [TaskController::class, 'index'])->name('home');
 
-    return view('notes.index')->with('notes', $notes); //También puedes usar el método –>with('notes', $notes) o el método ->withNotes($notes)
-});
+Route::resource('tasks', TaskController::class);
+
+Route::post('/tasks/{task}/comments', [CommentController::class, 'store']);
+
+Route::delete('/comments/{comment}', [CommentController::class, 'destroy']);
+
+Route::post('/tasks', [TaskController::class, 'store'])->name('tasks.store');

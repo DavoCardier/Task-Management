@@ -2,46 +2,53 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Task;
+use Illuminate\Http\Request;
+use App\Http\Requests;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\DB;
+
 
 class TaskController extends Controller
 {
+    public function index()
+    {
+        $tasks = Task::latest()->paginate(10);
+        return view('tasks.index', compact('tasks'));
+    }
+
     public function store(Request $request)
     {
         $validatedData = $request->validate([
-            'title' => 'required|min:5|max:50',
-            'description' => 'required|min:15|max:300',
-            'due_date' => 'required|date',
-            'status' => 'required|string',
+            'title' => 'required',
+            'due_date' => 'nullable|date',
+            'status' => 'required|string|max:20'
         ]);
 
-        $task = Task::create($validatedData);
-        
+        Task::create($validatedData);
+        return redirect()->route('tasks.index')->with('success', 'Tarea creada exitosamente.');
     }
 
-    public function index()
+    public function edit(Task $task)
     {
-        return Task::orderBy('id', 'desc')->get();
+        return view('tasks.edit', compact('task'));
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, Task $task)
     {
         $validatedData = $request->validate([
-            'title' => 'required|min:5|max:50',
-            'description' => 'required|min:15|max:300',
-            'due_date' => 'required|date',
-            'status' => 'required|string',
+            'title' => 'required',
+            'due_date' => 'nullable|date',
+            'status' => 'required|string|max:20'
         ]);
 
-        $task = Task::findOrFail($id);
         $task->update($validatedData);
-        
+        return redirect()->route('tasks.index')->with('success', 'Tarea actualizada exitosamente.');
     }
 
-    public function destroy($id)
+    public function destroy(Task $task)
     {
-        Task::findOrFail($id)->delete();
-        
+        $task->delete();
+        return redirect()->route('tasks.index')->with('success', 'Tarea eliminada exitosamente.');
     }
 }
